@@ -1,0 +1,63 @@
+/* You can add global styles to this file, and also import other style files */
+@import url('./assets/css/app.min.css');
+@import url('./assets/css/icons.min.css');
+/*@import url('./assets/css/left-sidebar.css');*/
+@import url('./assets/css/sidebar.css');
+
+
+a{
+  cursor: pointer;
+}
+.layout{
+  display: flex;
+}
+/*Menu left*/
+/**/
+/*.navbar-custom.expanded {
+  left: 79px; /* Cuando el sidebar está expandido 
+}*/
+
+.navbar-custom{
+  transition: all 0.5s ease;
+}
+.navbar-custom.minimized {
+  left: 79px; /* Cuando el sidebar está minimizado */
+  
+}
+.container-sidebar{
+  transition: all 0.5s ease;
+  position: relative;
+  width: 260px;
+}
+.container-sidebar.minimized {
+  width: 0;
+}
+
+
+
+
+/*tablas y contenido*/
+
+table thead {
+  position: sticky;
+}
+table thead {
+  inset-block-start: 0; /* "top" */
+}
+
+.same-hour {
+  background-color:	#CCFF00; /*#fff5e0;*/
+}
+
+.different-hour {
+  background-color: #fbfbfb; /*#fdf8ef;*/
+}	
+
+
+.scroll-list {
+  max-height: 200px; /* Ajusta la altura máxima según tus necesidades */
+  overflow-y: auto;
+}
+
+
+

@@ -1,0 +1,50 @@
+{
+  "name": "front-medico",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^17.1.0",
+    "@angular/common": "^17.1.0",
+    "@angular/compiler": "^17.1.0",
+    "@angular/core": "^17.1.0",
+    "@angular/forms": "^17.1.0",
+    "@angular/platform-browser": "^17.3.12",
+    "@angular/platform-browser-dynamic": "^17.1.0",
+    "@angular/router": "^17.1.0",
+    "@fortawesome/fontawesome-free": "^6.7.1",
+    "@types/bootstrap": "^5.2.10",
+    "@types/select2": "^4.0.63",
+    "bootstrap": "^5.3.3",
+    "jquery": "^3.7.1",
+    "jwt-decode": "^4.0.0",
+    "moment": "^2.30.1",
+    "ngx-toastr": "^19.0.0",
+    "rxjs": "~7.8.0",
+    "select2": "^4.1.0-rc.0",
+    "sweetalert2": "^11.14.5",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.3"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.1.2",
+    "@angular/cli": "^17.1.2",
+    "@angular/compiler-cli": "^17.1.0",
+    "@types/jasmine": "~5.1.0",
+    "@types/jquery": "^3.5.32",
+    "@types/node": "^22.9.1",
+    "jasmine-core": "~5.1.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "typescript": "~5.3.2"
+  }
+}
