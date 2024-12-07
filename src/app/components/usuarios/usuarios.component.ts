@@ -431,14 +431,19 @@ console.log("nombreoles: "+this.nombresDeRoles);
   editarUsuario(): void {
 
     if (this.usuarioForm.valid) {
-      const usuario = this.usuarioForm.value;  
-      const rolesArray = [usuario.roles]; 
+      const usuario = this.usuarioForm.value;
+    
+      // Verifica si roles es un string y conviértelo a un array
+      const rolesArray = Array.isArray(usuario.roles) ? usuario.roles : [usuario.roles];
+    
       const usuarioActualizado = {
         ...usuario,  // Mantén el resto de los campos del usuario
         locales: this.selectedLocal.map(local => local.id),  // Extrae solo los IDs
-        roles:rolesArray
+        roles: rolesArray  // Asegúrate de enviar roles como un array
       };
-
+    
+      console.log(usuarioActualizado);
+    
       this.usuarioservice.editarUsuario(usuarioActualizado).subscribe(
         (response) => {
           console.log('Usuario actualizado exitosamente:', response);
@@ -450,8 +455,9 @@ console.log("nombreoles: "+this.nombresDeRoles);
           Swal.fire('Error', 'Ocurrió un error al actualizar el usuario.', 'error');
         }
       );
-
-
+    
+    
+        
     }
 
     /*  // Eliminar la contraseña del objeto antes de enviarlo
