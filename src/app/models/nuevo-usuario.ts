@@ -13,8 +13,8 @@ export class NuevoUsuario {
   fechaReg: Date;
   usuarioAct?: number;
   fechaAct?: Date;
-  roles:  string | string[] = [];;
-  locales: string | string[] = [];
+  roles:  any[] = [];
+  locales: any | string[] = [];
 
   constructor(
     userName: string,
@@ -23,8 +23,8 @@ export class NuevoUsuario {
     nombres: string,
     apellidoPaterno: string,
     dni: string,
-    roles: string | string[] = [],// Obligatorio
-    locales: string | string[] = [],
+    roles: any[] = [],// Obligatorio
+    locales: string[] = [],
     fechaReg: Date, // Obligatorio
     apellidoMaterno?: string, // Opcional
     celular?: string, // Opcional

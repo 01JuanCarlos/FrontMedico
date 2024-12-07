@@ -109,20 +109,30 @@
                           (click)="reset()"></button>
                       </div>
                       <div class="modal-body">
-                        <form [formGroup]="usuarioForm" (ngSubmit)="crearUsuario()">
+                        <form [formGroup]="usuarioForm">
+                          <input type="number" class="form-control" hidden="true" id="id" formControlName="id">
+
+                          <button (click)="imrpimirForm()">imrpimir</button>
                           <!-- DNI -->
                           <div class="mb-3">
                             <label for="dni" class="form-label">DNI</label>
-                            <input type="text" class="form-control" id="dni" formControlName="dni" maxlength="8"
-                              autocomplete="off">
-                            <div *ngIf="usuarioForm.get('dni')?.hasError('DniExists') && usuarioForm.get('dni')?.dirty"
+                            <input type="number" class="form-control" id="dni" formControlName="dni" maxlength="8"
+                              autocomplete="off" (input)="restrictLength($event)">
+                            <div class="text-danger" *ngIf="usuarioForm.get('dni')?.hasError('invalidDni')">
+                              DNI inválido. Por favor, ingrese un DNI válido.
+                            </div>
+
+                            <!--  <div *ngIf="usuarioForm.get('dni')?.hasError('DniExists') && usuarioForm.get('dni')?.dirty"
                               class="text-danger">
                               Este DNi ya está registrado.
+                            </div> -->
+                            <div
+                              *ngIf="usuarioForm.get('dni')?.hasError('dniDuplicado') && usuarioForm.get('dni')?.touched">
+                              <small class="text-danger">Este DNI ya está en uso.</small>
                             </div>
                             <!-- Errores de validación básica (required, minlength, maxlength) -->
                             <div *ngIf="usuarioForm.get('dni')?.invalid && usuarioForm.get('dni')?.touched"
                               class="text-danger">
-
                               <small *ngIf="usuarioForm.get('dni')?.errors?.['required']">El DNI es obligatorio.</small>
                               <small *ngIf="usuarioForm.get('dni')?.errors?.['minlength']">El DNI debe tener 8
                                 caracteres.</small>
@@ -175,8 +185,8 @@
                           <!-- Celular -->
                           <div class="mb-3">
                             <label for="celular" class="form-label">Celular</label>
-                            <input type="text" class="form-control" id="celular" formControlName="celular"
-                              maxlength="30" autocomplete="off">
+                            <input type="number" class="form-control" id="celular" formControlName="celular"
+                              maxlength="9" autocomplete="off">
                           </div>
 
                           <!-- Dirección -->
@@ -199,11 +209,9 @@
                             <input type="email" class="form-control" id="userName" formControlName="userName"
                               maxlength="50" autocomplete="off">
                             <div
-                              *ngIf="usuarioForm.get('userName')?.hasError('userNameExists') && usuarioForm.get('userName')?.dirty"
-                              class="text-danger">
-                              Este correo ya está registrado.
+                              *ngIf="usuarioForm.get('userName')?.hasError('UsuarioDuplicado') && usuarioForm.get('userName')?.touched">
+                              <small class="text-danger">Este DNI ya está en uso.</small>
                             </div>
-
 
                             <div *ngIf="usuarioForm.get('userName')?.invalid && usuarioForm.get('userName')?.touched"
                               class="text-danger">
@@ -219,18 +227,25 @@
                           <!-- Password -->
                           <div class="mb-3">
                             <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="password" formControlName="password"
-                              minlength="4" maxlength="16" autocomplete="off">
+                            <div class="input-group">
+                              <input [type]="passwordVisible ? 'text' : 'password'" class="form-control" id="password"
+                                formControlName="password" minlength="4" autocomplete="off">
+
+                              <button type="button" class="btn btn-outline-secondary"
+                                (click)="togglePasswordVisibility()">
+                                {{ passwordVisible ? 'Ocultar' : 'Mostrar' }}
+                              </button>
+                            </div>
                             <div *ngIf="usuarioForm.get('password')?.invalid && usuarioForm.get('password')?.touched"
                               class="text-danger">
                               <small *ngIf="usuarioForm.get('password')?.errors?.['required']">La contraseña es
                                 obligatoria.</small>
                               <small *ngIf="usuarioForm.get('password')?.errors?.['minlength']">La contraseña debe tener
                                 al menos 4 caracteres.</small>
-                              <small *ngIf="usuarioForm.get('password')?.errors?.['maxlength']">La contraseña no puede
-                                tener más de 16 caracteres.</small>
+
                             </div>
                           </div>
+
 
                           <!-- Estado (Activo) -->
                           <div class="mb-3">
@@ -249,7 +264,6 @@
                                 {{ rol.rolNombre }}
                               </option>
                             </select>
-
                           </div>
                         -->
                           <div class="mb-3">
@@ -290,8 +304,8 @@
                             </thead>
                             <tbody>
                               <tr *ngFor="let local of selectedLocal; let i = index">
-                                <td>{{ i + 1 }}</td>
-                                <td>{{ local.nombre }}</td>
+                                <td>{{local.id}}</td>
+                                <td>{{local.nombre }}</td>
                                 <td>
                                   <button type="button" class="btn btn-danger"
                                     (click)="eliminarLocal(i)">Eliminar</button>
@@ -303,8 +317,20 @@
 
                           <!-- Botones -->
                           <div class="modal-footer">
+                            <!-- Botón Guardar, se muestra si 'id' está vacío (null o undefined) -->
                             <button type="submit" class="btn btn-primary" [disabled]="usuarioForm.invalid"
-                              data-bs-dismiss="modal" aria-hidden="true">Guardar</button>
+                              data-bs-dismiss="modal" aria-hidden="true" *ngIf="!usuarioForm.get('id')?.value"
+                              (click)="crearUsuario()">
+                              Guardar
+                            </button>
+
+                            <!-- Botón Actualizar, se muestra si 'id' tiene un valor -->
+                            <button type="submit" class="btn btn-primary" [disabled]="usuarioForm.invalid"
+                              data-bs-dismiss="modal" aria-hidden="true" *ngIf="usuarioForm.get('id')?.value"
+                              (click)="editarUsuario()">
+                              Guardar Cambios
+                            </button>
+
                             <button type="button" class="btn btn-secondary" (click)="reset()">Limpiar</button>
                           </div>
 

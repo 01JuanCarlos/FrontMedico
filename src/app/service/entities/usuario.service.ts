@@ -20,12 +20,17 @@ export class UsuarioService {
   }
 
 
+  
 
   // Método para editar un usuario
   editarUsuario(usuario: any): Observable<any> {
-    return this.httpClient.put(`${this.authURL}editar`, usuario); // Usamos PUT para la actualización
+    return this.httpClient.put(`${this.authURL}editar/${usuario.id}`, usuario); // Incluye el ID en la URL
   }
   
+  // Método para obtener un usuario por su ID
+  obtenerUsuarioPorId(id: number): Observable<any> {
+    return this.httpClient.get(`${this.authURL}${id}`);
+  }
 
 
   eliminarUsuario(id: number): Observable<any> {

@@ -14,7 +14,7 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient) { }
 
-   // Método para verificar si el correo ya está registrado
+  // Método para verificar si el correo ya está registrado
   /*
    verificarCorreo(email: string): Observable<boolean> {
     // Realiza la solicitud HTTP para verificar si el correo ya está registrado
@@ -23,23 +23,32 @@ export class AuthService {
     );
   }*/
 
-    /*checkDniOrUsernameExists(value: string, userId: number): Observable<boolean> {
-      // Aquí asumimos que existe una API que puede verificar si un DNI o Username existe, excluyendo al usuario actual
-      return this.httpClient.get<boolean>(`check-dni-or-username`, {
-        params: { value, excludeUserId: userId.toString() }
-      });
-    }*/
+  /*checkDniOrUsernameExists(value: string, userId: number): Observable<boolean> {
+    // Aquí asumimos que existe una API que puede verificar si un DNI o Username existe, excluyendo al usuario actual
+    return this.httpClient.get<boolean>(`check-dni-or-username`, {
+      params: { value, excludeUserId: userId.toString() }
+    });
+  }*/
 
+  validarDni(dni: string, excludeUserId: number | null): Observable<boolean> {
+    const params = { dni, excludeUserId: excludeUserId ? excludeUserId.toString() : '' };
+    return this.httpClient.get<boolean>(`${this.authURL}validar-dni`, { params });
+  }
   
-      
-    public existsByUserName(userName: string): Observable<boolean> {
-      return this.httpClient.get<boolean>(`${this.authURL}existsByUserName/${userName}`);
-    }
+  validarUsuario(username: string, excludeUserId: number | null): Observable<boolean> {
+    const params = { username, excludeUserId: excludeUserId ? excludeUserId.toString() : '' };
+    return this.httpClient.get<boolean>(`${this.authURL}validar-UserName`, { params });
+  }
 
-    public existsByDNI(dni: string): Observable<boolean> {
-      return this.httpClient.get<boolean>(`${this.authURL}existsByDni/${dni}`);
-    }
-    
+
+/*
+  public existsByUserName(userName: string): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${this.authURL}existsByUserName/${userName}`);
+  }
+*/
+  public existsByDNI(dni: string): Observable<boolean> {
+    return this.httpClient.get<boolean>(`${this.authURL}existsByDni/${dni}`);
+  }
 
   public nuevo(nuevoUsuario: NuevoUsuario): Observable<any> {
     return this.httpClient.post<any>(this.authURL + 'nuevo', nuevoUsuario);
@@ -52,5 +61,5 @@ export class AuthService {
   public refresh(dto: JwtDTO): Observable<JwtDTO> {
     return this.httpClient.post<JwtDTO>(this.authURL + 'refresh', dto);
   }
-  
+
 }
