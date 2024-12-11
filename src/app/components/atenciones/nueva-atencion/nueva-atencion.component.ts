@@ -9,13 +9,14 @@ import { ProcedimientoService } from '../../../service/entities/procedimiento.se
 import { map, Observable, startWith } from 'rxjs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-nueva-atencion',
   standalone: true,
-  imports: [CommonModule,
-    FormsModule, ReactiveFormsModule,
+  imports: [
+    CommonModule,
+    FormsModule, 
+    ReactiveFormsModule,
     MatAutocompleteModule,
     MatInputModule],
   templateUrl: './nueva-atencion.component.html',
@@ -31,6 +32,7 @@ export class NuevaAtencionComponent implements OnInit {
   productoControl = new FormControl();
   productos: string[] = ['Zapatos', 'Sandalias', 'Botas', 'Zapatillas'];
   filteredProductos!: Observable<string[]>;
+  //
 
 
   constructor(private usuarioService: UsuarioService,
@@ -56,6 +58,7 @@ export class NuevaAtencionComponent implements OnInit {
 
 
   filterProductos(value: string): string[] {
+    console.log("filter");
     const filterValue = value.toLowerCase();
     
     // No mostrar resultados si el valor está vacío
