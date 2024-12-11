@@ -9,13 +9,14 @@ import { ProcedimientoService } from '../../../service/entities/procedimiento.se
 import { map, Observable, startWith } from 'rxjs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
+import { Paciente } from '../../../models/paciente';
 
 @Component({
   selector: 'app-nueva-atencion',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule, 
+    FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatInputModule],
@@ -26,13 +27,18 @@ export class NuevaAtencionComponent implements OnInit {
   locales: any[] = [];
   nombreUsuario: string | null | undefined;
   especialistas: { id: number; nombres: string }[] = [];
-  pacientes: { id: number; nombres: string; apellidos: string; dni: string }[] = [];
+ 
   procedimientos: any[] = [];
   //
-  productoControl = new FormControl();
-  productos: string[] = ['Zapatos', 'Sandalias', 'Botas', 'Zapatillas'];
+  //productoControl = new FormControl();
+  especialistaControl = new FormControl();
   //
   filteredEspecialistas: string[] = [];
+  
+  pacienteControl = new FormControl();
+  pacientes: { id: number; nombres: string; apellidos: string; dni: string }[] = [];
+  filterPacientesList: string[] = [];
+
 
 
   constructor(private usuarioService: UsuarioService,
@@ -50,17 +56,17 @@ export class NuevaAtencionComponent implements OnInit {
     this.obtenerPacienets();
     this.obtenerProcedimientos(1);
     //
-   /* this.filteredEspecialistas = this.productoControl.valueChanges.pipe(
-      startWith(''), // Valor inicial
-      map(value => this.filterEspecialistas(value || ''))
-    );*/
+    /* this.filteredEspecialistas = this.productoControl.valueChanges.pipe(
+       startWith(''), // Valor inicial
+       map(value => this.filterEspecialistas(value || ''))
+     );*/
   }
 
 
   filterEspecialistas(event: Event): void {
     const input = event.target as HTMLInputElement;
     const filterValue = input.value.toLowerCase(); // Accediendo correctamente a 'value'
-    
+
     if (filterValue === '') {
       this.filteredEspecialistas = [];
       return;
@@ -70,8 +76,23 @@ export class NuevaAtencionComponent implements OnInit {
       .filter(especialista => especialista.nombres.toLowerCase().includes(filterValue))
       .map(especialista => especialista.nombres);
   }
-  
 
+
+
+
+  filterPacientes(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const filterValue = input.value.toLowerCase();
+
+    if (filterValue === '') {
+      this.filterPacientesList = [];
+      return;
+    }
+
+    this.filterPacientesList = this.pacientes
+      .filter(paciente => paciente.nombres.toLowerCase().includes(filterValue))
+      .map(paciente => paciente.nombres);
+  }
 
   obtenerusuario() {
     this.usuarioService.obtenerPorUserName(this.nombreUsuario!).subscribe(
@@ -101,7 +122,7 @@ export class NuevaAtencionComponent implements OnInit {
             id: especialista.id,
             nombres: especialista.nombres,
           }));
-        }console.log('Especialista: ', this.especialistas); 
+        } console.log('Especialista: ', this.especialistas);
       },
       error: (err) => {
         console.error('Error al obtener especialistas activos:', err);

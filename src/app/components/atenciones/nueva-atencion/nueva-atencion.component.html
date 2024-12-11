@@ -58,53 +58,35 @@
 
                                     </div>
 
-                                    <mat-form-field appearance="outline">
-                                        <mat-label>Especialista</mat-label>
-                                        <input type="text" matInput [formControl]="productoControl" [matAutocomplete]="auto" (input)="filterEspecialistas($event)">
-                                        
-                                        <mat-autocomplete #auto="matAutocomplete">
-                                          <mat-option *ngFor="let nombre of filteredEspecialistas" [value]="nombre">
-                                            {{ nombre }}
-                                          </mat-option>
-                                        </mat-autocomplete>
-                                      </mat-form-field>
-                                      
-
+                                    
+                                   
 
                                     <div class="row g-2">
+                                        
+                                        <mat-form-field appearance="outline" fxFlex="50%">
+                                            <mat-label>Especialista</mat-label>
+                                            <input type="text" placeholder="Escriba el nombre del Especialista" matInput [formControl]="especialistaControl" [matAutocomplete]="autoEspecialista" (input)="filterEspecialistas($event)">
+                                            
+                                            <mat-autocomplete #autoEspecialista="matAutocomplete">
+                                              <mat-option *ngFor="let nombre of filteredEspecialistas" [value]="nombre">
+                                                {{ nombre }}
+                                              </mat-option>
+                                            </mat-autocomplete>
+                                          </mat-form-field>
+                                          
+                                          <mat-form-field appearance="outline" fxFlex="50%">
+                                            <mat-label>Paciente</mat-label>
+                                            <input type="text" placeholder="Escriba el nombre del Paciente" matInput [formControl]="pacienteControl" [matAutocomplete]="autoPaciente" (input)="filterPacientes($event)">
+                                            
+                                            <mat-autocomplete #autoPaciente="matAutocomplete">
+                                              <mat-option *ngFor="let nombre of filterPacientesList" [value]="nombre">
+                                                {{ nombre }}
+                                              </mat-option>
+                                            </mat-autocomplete>
+                                          </mat-form-field>
+                                          
                                         <div class="mb-3 col-xl-6 col-lg-6 col-md-12">
-                                            <div class="col-12">
-                                                <label class="form-label" for="podologo">Podólogo</label>
-                                                <input type="text" class="form-control" data-provide="typeahead"
-                                                    id="podologo" placeholder="Escriba el nombre del podólogo"
-                                                    style="text-transform: uppercase;" required="required">
-                                                <span class="font-11 text-muted">¡El podólogo debe estar
-                                                    registrado!</span>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="mostrarTodosE">
-                                                    <label class="form-check-label" for="mostrarTodosE">¿Mostrar todos
-                                                        los podólogos?</label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="mb-3 col-xl-6 col-lg-6 col-md-12">
-                                            <div class="col-12">
-                                                <label for="paciente" class="form-label">Paciente</label>
-                                                <input type="text" id="paciente" class="form-control"
-                                                    data-provide="typeahead"
-                                                    placeholder="Escriba el nombre, apellido o dni del paciente"
-                                                    style="text-transform: uppercase;" required="required">
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-check">
-                                                    <input type="checkbox" class="form-check-input" id="mostrarTodosP">
-                                                    <label class="form-check-label" for="mostrarTodosP">¿Mostrar todos
-                                                        los pacientes?</label>
-                                                </div>
-                                            </div>
+                                           
                                         </div>
                                     </div>
                                     <!-- end col-->
