@@ -31,8 +31,8 @@ export class NuevaAtencionComponent implements OnInit {
   //
   productoControl = new FormControl();
   productos: string[] = ['Zapatos', 'Sandalias', 'Botas', 'Zapatillas'];
-  filteredProductos!: Observable<string[]>;
   //
+  filteredEspecialistas: string[] = [];
 
 
   constructor(private usuarioService: UsuarioService,
@@ -50,23 +50,25 @@ export class NuevaAtencionComponent implements OnInit {
     this.obtenerPacienets();
     this.obtenerProcedimientos(1);
     //
-    this.filteredProductos = this.productoControl.valueChanges.pipe(
+   /* this.filteredEspecialistas = this.productoControl.valueChanges.pipe(
       startWith(''), // Valor inicial
-      map(value => this.filterProductos(value || ''))
-    );
+      map(value => this.filterEspecialistas(value || ''))
+    );*/
   }
 
 
-  filterProductos(value: string): string[] {
-    console.log("filter");
-    const filterValue = value.toLowerCase();
+  filterEspecialistas(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const filterValue = input.value.toLowerCase(); // Accediendo correctamente a 'value'
     
-    // No mostrar resultados si el valor está vacío
     if (filterValue === '') {
-      return [];
+      this.filteredEspecialistas = [];
+      return;
     }
-  
-    return this.productos.filter(producto => producto.toLowerCase().includes(filterValue));
+
+    this.filteredEspecialistas = this.especialistas
+      .filter(especialista => especialista.nombres.toLowerCase().includes(filterValue))
+      .map(especialista => especialista.nombres);
   }
   
 
@@ -99,7 +101,7 @@ export class NuevaAtencionComponent implements OnInit {
             id: especialista.id,
             nombres: especialista.nombres,
           }));
-        }
+        }console.log('Especialista: ', this.especialistas); 
       },
       error: (err) => {
         console.error('Error al obtener especialistas activos:', err);
