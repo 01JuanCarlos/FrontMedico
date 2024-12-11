@@ -1,0 +1,176 @@
+<div class="wrapper">
+
+
+
+    <!-- ============================================================== -->
+    <!-- Start Page Content here -->
+    <!-- ============================================================== -->
+
+    <div class="content-page">
+        <div class="content">
+
+
+            <!-- Start Content-->
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box">
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item">
+                                        <a href="javascript: void(0);">Caminando</a>
+                                    </li>
+                                    <li class="breadcrumb-item active">Atenciones</li>
+                                </ol>
+                            </div>
+                            <h4 class="page-title">Nueva atención</h4>
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+            </div>
+            <!-- container -->
+
+
+            <div class="row" id="main-vuejs">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <div class="row">
+                                <form>
+                                    <div class="col-xl-12 col-lg-12">
+                                        <h6 class="font-18 mt-3">Local de atención</h6>
+                                        <div class="mb-3">
+                                            <div class="form-check form-check-inline"
+                                                *ngFor="let local of locales; let i = index">
+                                                <input type="radio" id="local{{i}}" name="customRadio1"
+                                                    class="form-check-input" [value]="local.id">
+                                                <!-- Bind el ID del local como valor -->
+                                                <label class="form-check-label" [for]="'local' + i">
+                                                    {{ local.nombre }} <!-- Muestra el nombre del local -->
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    
+                                    
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Producto</mat-label>
+                                        <input type="text" matInput [formControl]="productoControl" [matAutocomplete]="auto">
+                                        <mat-autocomplete #auto="matAutocomplete">
+                                            <mat-option *ngFor="let producto of filteredProductos | async" [value]="producto">
+                                                {{ producto }}
+                                            </mat-option>
+                                        </mat-autocomplete>
+                                    </mat-form-field>
+                                    
+                                    
+
+
+                                    <div class="row g-2">
+                                        <div class="mb-3 col-xl-6 col-lg-6 col-md-12">
+                                            <div class="col-12">
+                                                <label class="form-label" for="podologo">Podólogo</label>
+                                                <input type="text" class="form-control" data-provide="typeahead"
+                                                    id="podologo" placeholder="Escriba el nombre del podólogo"
+                                                    style="text-transform: uppercase;" required="required">
+                                                <span class="font-11 text-muted">¡El podólogo debe estar
+                                                    registrado!</span>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="mostrarTodosE">
+                                                    <label class="form-check-label" for="mostrarTodosE">¿Mostrar todos
+                                                        los podólogos?</label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3 col-xl-6 col-lg-6 col-md-12">
+                                            <div class="col-12">
+                                                <label for="paciente" class="form-label">Paciente</label>
+                                                <input type="text" id="paciente" class="form-control"
+                                                    data-provide="typeahead"
+                                                    placeholder="Escriba el nombre, apellido o dni del paciente"
+                                                    style="text-transform: uppercase;" required="required">
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-check">
+                                                    <input type="checkbox" class="form-check-input" id="mostrarTodosP">
+                                                    <label class="form-check-label" for="mostrarTodosP">¿Mostrar todos
+                                                        los pacientes?</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end col-->
+                                    <br><br>
+                                    <div class="row g-2">
+                                        <label for="producto" class="form-label">Procedimiento</label>
+                                    </div>
+
+                                    <div class="row g-2">
+                                        <div class="mb-2 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                                            <input type="text" id="producto" class="form-control"
+                                                data-provide="typeahead" placeholder="Escriba el procedimiento"
+                                                style="text-transform: uppercase;">
+                                        </div>
+
+                                        <div class="mb-2 col-xl-3 col-lg-3 col-md-3 col-sm-8 col-xs-8">
+                                            <input type="number" id="precio" class="form-control" placeholder="Precio"
+                                                style="text-transform: uppercase;">
+                                        </div>
+
+                                        <div class="mb-2 col-xl-2 col-lg-2 col-md-2 col-sm-4 col-xs-4">
+                                            <button type="button" class="btn btn-dark agregar">
+                                                <span class="mdi mdi-plus"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <!-- end col-->
+
+
+                                    <table class="table table-centered mb-0" id="detalle">
+                                        <thead>
+                                            <tr>
+                                                <th>Procedimiento</th>
+                                                <th>Costo S/.</th>
+                                                <th>Quitar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+
+                                    <br><br>
+                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                    <button type="reset" class="btn btn-warning">Limpiar</button>
+
+                                </form>
+                            </div>
+                            <!-- end row -->
+
+
+                        </div>
+                        <!-- end card-body-->
+                    </div>
+                    <!-- end card-->
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+
+
+
+        </div>
+    </div>
+
+
+
+</div>
+<!-- END wrapper -->

@@ -8,6 +8,7 @@ let arrow = document.querySelectorAll(".arrow");
     });
   }
   let containersidebar = document.querySelector(".container-sidebar");
+  let contentpage =document.querySelector(".content-page");
   let sidebar = document.querySelector(".sidebar");
   let sidebarBtn = document.querySelector(".bx-menu");
   let navbar = document.querySelector(".navbar-custom");
@@ -16,5 +17,6 @@ let arrow = document.querySelectorAll(".arrow");
     sidebar.classList.toggle("minimized");
     navbar.classList.toggle("minimized");
     containersidebar.classList.toggle("minimized");
+    contentpage.classList.toggle("minimized");
   });
 });

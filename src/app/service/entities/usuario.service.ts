@@ -42,5 +42,8 @@ export class UsuarioService {
     return this.httpClient.patch<any>(`${this.authURL}editar/${id}`, usuarioActualizado);
   }
 
+   obtenerPorUserName(username: string): Observable<any> {
+    return this.httpClient.get(`${this.authURL}buscarporNombre/${username}`);
+    }
 
 }

@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="wrapper" >
 
   <!-- ============================================================== -->
   <!-- Start Page Content here -->
@@ -112,7 +112,6 @@
                         <form [formGroup]="usuarioForm">
                           <input type="number" class="form-control" hidden="true" id="id" formControlName="id">
 
-                          <button (click)="imrpimirForm()">imrpimir</button>
                           <!-- DNI -->
                           <div class="mb-3">
                             <label for="dni" class="form-label">DNI</label>
@@ -210,7 +209,7 @@
                               maxlength="50" autocomplete="off">
                             <div
                               *ngIf="usuarioForm.get('userName')?.hasError('UsuarioDuplicado') && usuarioForm.get('userName')?.touched">
-                              <small class="text-danger">Este DNI ya está en uso.</small>
+                              <small class="text-danger">Este email ya está en uso.</small>
                             </div>
 
                             <div *ngIf="usuarioForm.get('userName')?.invalid && usuarioForm.get('userName')?.touched"

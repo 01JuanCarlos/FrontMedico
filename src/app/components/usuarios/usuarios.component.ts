@@ -288,8 +288,8 @@ export class UsuariosComponent implements OnInit {
           nombre: local.nombre,
         }));
         console.table(this.selectedLocal);
-        
-      
+
+
         if (Array.isArray(usuario.roles)) {
           this.nombresDeRoles = usuario.roles.map(role => role.rolNombre);
         } else if (typeof usuario.roles === 'string') {
@@ -316,7 +316,7 @@ export class UsuariosComponent implements OnInit {
          this.selectedLocal = localesArray.map(local => ({ nombre: local.trim() }));
        */
 
-console.log("nombreoles: "+this.nombresDeRoles);
+        console.log("nombreoles: " + this.nombresDeRoles);
         this.usuarioForm.setValue({
           id: usuario.id,
           dni: usuario.dni,
@@ -432,18 +432,18 @@ console.log("nombreoles: "+this.nombresDeRoles);
 
     if (this.usuarioForm.valid) {
       const usuario = this.usuarioForm.value;
-    
+
       // Verifica si roles es un string y conviértelo a un array
       const rolesArray = Array.isArray(usuario.roles) ? usuario.roles : [usuario.roles];
-    
+
       const usuarioActualizado = {
         ...usuario,  // Mantén el resto de los campos del usuario
         locales: this.selectedLocal.map(local => local.id),  // Extrae solo los IDs
         roles: rolesArray  // Asegúrate de enviar roles como un array
       };
-    
+
       console.log(usuarioActualizado);
-    
+
       this.usuarioservice.editarUsuario(usuarioActualizado).subscribe(
         (response) => {
           console.log('Usuario actualizado exitosamente:', response);
@@ -455,9 +455,9 @@ console.log("nombreoles: "+this.nombresDeRoles);
           Swal.fire('Error', 'Ocurrió un error al actualizar el usuario.', 'error');
         }
       );
-    
-    
-        
+
+
+
     }
 
     /*  // Eliminar la contraseña del objeto antes de enviarlo
