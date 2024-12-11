@@ -6,10 +6,9 @@ import { TokenService } from '../../../service/security/token.service';
 import { EspecialistaService } from '../../../service/entities/especialista.service';
 import { PacienteService } from '../../../service/entities/paciente.service';
 import { ProcedimientoService } from '../../../service/entities/procedimiento.service';
-import { map, Observable, startWith } from 'rxjs';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
-import { Paciente } from '../../../models/paciente';
+import { Especialista } from '../../../models/especialista';
 
 @Component({
   selector: 'app-nueva-atencion',
@@ -26,20 +25,26 @@ import { Paciente } from '../../../models/paciente';
 export class NuevaAtencionComponent implements OnInit {
   locales: any[] = [];
   nombreUsuario: string | null | undefined;
-  especialistas: { id: number; nombres: string }[] = [];
- 
-  procedimientos: any[] = [];
+
+
   //
-  //productoControl = new FormControl();
   especialistaControl = new FormControl();
-  //
+  especialistas: { id: number; nombres: string }[] = [];
   filteredEspecialistas: string[] = [];
-  
+  //
   pacienteControl = new FormControl();
-  pacientes: { id: number; nombres: string; apellidos: string; dni: string }[] = [];
+  pacientes: { id: number; fullname: string; dni: string }[] = [];
   filterPacientesList: string[] = [];
-
-
+  //
+  procedimientoControl = new FormControl();
+  procedimientos: { id: number; descripcion: string, precio: number }[] = []; // Inicializar el array
+  filteredProcedimientosList: string[] = [];
+  //
+  localid: number = 0;
+  //
+  precioSeleccionado: number | null = null;
+  //
+  registros: { procedimiento: string; precio: number,especialista: Especialista,paciente:string,localid:number }[] = []; 
 
   constructor(private usuarioService: UsuarioService,
     private tokenservice: TokenService,
@@ -52,16 +57,39 @@ export class NuevaAtencionComponent implements OnInit {
   ngOnInit(): void {
     this.nombreUsuario = this.tokenservice.getUserName();
     this.obtenerusuario();
-    this.obtenerEspecialistasActivos();
-    this.obtenerPacienets();
-    this.obtenerProcedimientos(1);
-    //
-    /* this.filteredEspecialistas = this.productoControl.valueChanges.pipe(
-       startWith(''), // Valor inicial
-       map(value => this.filterEspecialistas(value || ''))
-     );*/
   }
 
+
+  agregarRegistro(): void {
+    const procedimientoSeleccionado = this.procedimientoControl.value;
+    const precioSeleccionado = this.precioSeleccionado;
+
+   /* if (procedimientoSeleccionado && precioSeleccionado !== null) {
+      this.registros.push({
+        procedimiento: procedimientoSeleccionado,
+        precio: precioSeleccionado,
+      });
+      this.procedimientoControl.reset();
+      this.precioSeleccionado = null;
+    } else {
+      alert('Debe seleccionar un procedimiento válido.');
+    }*/
+  }
+
+  quitarRegistro(index: number): void {
+    this.registros.splice(index, 1);
+  }
+
+
+  onLocalChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    this.localid = Number(inputElement.value); // Asigna el valor seleccionado como número
+    console.log('Local seleccionado con ID:', this.localid);
+    this.obtenerPacienets(this.localid);
+    this.procedimientos = [];
+    this.obtenerProcedimientos(this.localid);
+    this.obtenerEspecialistasActivos(this.localid);
+  }
 
   filterEspecialistas(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -90,8 +118,32 @@ export class NuevaAtencionComponent implements OnInit {
     }
 
     this.filterPacientesList = this.pacientes
-      .filter(paciente => paciente.nombres.toLowerCase().includes(filterValue))
-      .map(paciente => paciente.nombres);
+      .filter(paciente => paciente.fullname.toLowerCase().includes(filterValue))
+      .map(paciente => paciente.fullname);
+  }
+
+
+  seleccionarProcedimiento(descripcion: string): void {
+    const procedimiento = this.procedimientos.find(
+      (proc) => proc.descripcion.toLowerCase() === descripcion.toLowerCase()
+    );
+    this.precioSeleccionado = procedimiento ? procedimiento.precio : null;
+  }
+
+
+
+  filterProcedimientos(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const filterValue = input.value.toLowerCase();
+
+    if (filterValue === '') {
+      this.filteredProcedimientosList = [];
+      return;
+    }
+
+    this.filteredProcedimientosList = this.procedimientos
+      .filter(procedimiento => procedimiento.descripcion.toLowerCase().includes(filterValue))
+      .map(procedimiento => procedimiento.descripcion);
   }
 
   obtenerusuario() {
@@ -110,19 +162,17 @@ export class NuevaAtencionComponent implements OnInit {
     );
   }
 
-
-
-  obtenerEspecialistasActivos() {
-    this.especialistaService.obtenerTodosActivos().subscribe({
-      next: (data: any) => { // Ajusta el tipo de 'data' si es necesario
-        // Si 'data' tiene los especialistas
+  obtenerEspecialistasActivos(localId: number): void {
+    this.especialistaService.obtenerActivosPorLocal(localId).subscribe({
+      next: (data: Especialista[]) => { // Ajusta si tienes un modelo 'Especialista'
         if (data && Array.isArray(data)) {
           // Mapear solo los campos 'id' y 'nombres'
-          this.especialistas = data.map((especialista: any) => ({
+          this.especialistas = data.map(especialista => ({
             id: especialista.id,
             nombres: especialista.nombres,
           }));
-        } console.log('Especialista: ', this.especialistas);
+        }
+        console.log('Especialistas:', this.especialistas);
       },
       error: (err) => {
         console.error('Error al obtener especialistas activos:', err);
@@ -130,14 +180,13 @@ export class NuevaAtencionComponent implements OnInit {
     });
   }
 
-  obtenerPacienets() {
-    this.pacienteService.obtenerTodos().subscribe({
+  obtenerPacienets(localId: number) {
+    this.pacienteService.obtenerPacientesPorLocal(localId).subscribe({
       next: (data: any) => {
         if (data && Array.isArray(data)) {
           this.pacientes = data.map((paciente: any) => ({
             id: paciente.id,
-            nombres: paciente.nombres,
-            apellidos: paciente.apellidos,
+            fullname: paciente.fullname,
             dni: paciente.dni
           }));
           console.log('Pacientes: ', this.pacientes); // Imprimir en la consola
@@ -150,16 +199,28 @@ export class NuevaAtencionComponent implements OnInit {
   }
 
 
+
   obtenerProcedimientos(localid: number): void {
     this.procedimientoService.obtenerActivosPorLocal(localid).subscribe(
       (data) => {
-        this.procedimientos = data;
-        console.log('Procedimientos activos:', this.procedimientos);
+        // Mapeamos los datos y los agregamos al array existente
+        const nuevosProcedimientos = data.map((procedimiento: any) => ({
+          id: procedimiento.id,
+          descripcion: procedimiento.descripcion,
+          precio: procedimiento.precio
+        }));
+
+        // Agregar los nuevos procedimientos al array existente
+        this.procedimientos.push(...nuevosProcedimientos);
+
+        console.log('Procedimientos:', nuevosProcedimientos);
+        console.log('Array actual de procedimientos:', this.procedimientos);
       },
       (error) => {
         console.error('Error al obtener procedimientos:', error);
       }
     );
   }
+
 
 }

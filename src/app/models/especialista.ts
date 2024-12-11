@@ -1,14 +1,11 @@
 export class Especialista {
+    id: number;
     nombres: string;
-    estado: string;
-    especialidad: string;
-    locales: number[]; 
 
-    constructor(nombres:string,estado:string,especialidad:string,locales: number[]){
+    constructor(id:number,nombres:string){
+        this.id = id;
         this.nombres=nombres;
-        this.estado=estado;
-        this.especialidad=especialidad;
-        this.locales=locales;
+      
 
     }
 }

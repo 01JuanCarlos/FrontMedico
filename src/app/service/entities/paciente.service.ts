@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class PacienteService {
-  private apiURL = 'http://localhost:9099/api/app/pacientes';
+  private apiURL = 'http://localhost:9099/api/app/pacientes/';
 
   constructor(private http: HttpClient) {}
 
@@ -20,5 +20,10 @@ export class PacienteService {
  
   obtenerTodos(): Observable<Paciente[]> {
     return this.http.get<Paciente[]>(`${this.apiURL}`);
+  }
+
+  obtenerPacientesPorLocal(localId: number): Observable<Paciente[]> {
+    const url = `${this.apiURL}porlocal/${localId}`;
+    return this.http.get<Paciente[]>(url);
   }
 }

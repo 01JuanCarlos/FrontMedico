@@ -45,75 +45,97 @@
                                     <div class="col-xl-12 col-lg-12">
                                         <h6 class="font-18 mt-3">Local de atención</h6>
                                         <div class="mb-3">
-                                            <div class="form-check form-check-inline"
-                                                *ngFor="let local of locales; let i = index">
-                                                <input type="radio" id="local{{i}}" name="customRadio1"
-                                                    class="form-check-input" [value]="local.id">
-                                                <!-- Bind el ID del local como valor -->
+                                            <div class="form-check form-check-inline" *ngFor="let local of locales; let i = index">
+                                                <input
+                                                    type="radio"
+                                                    id="local{{i}}"
+                                                    name="customRadio1"
+                                                    class="form-check-input"
+                                                    [value]="local.id" 
+                                                    (change)="onLocalChange($event)" 
+                                                >
                                                 <label class="form-check-label" [for]="'local' + i">
                                                     {{ local.nombre }} <!-- Muestra el nombre del local -->
                                                 </label>
                                             </div>
                                         </div>
-
                                     </div>
-
                                     
-                                   
+
+
+
 
                                     <div class="row g-2">
-                                        
+
                                         <mat-form-field appearance="outline" fxFlex="50%">
                                             <mat-label>Especialista</mat-label>
-                                            <input type="text" placeholder="Escriba el nombre del Especialista" matInput [formControl]="especialistaControl" [matAutocomplete]="autoEspecialista" (input)="filterEspecialistas($event)">
-                                            
+                                            <input type="text" placeholder="Escriba el nombre del Especialista" matInput
+                                                [formControl]="especialistaControl" [matAutocomplete]="autoEspecialista"
+                                                (input)="filterEspecialistas($event)">
+
                                             <mat-autocomplete #autoEspecialista="matAutocomplete">
-                                              <mat-option *ngFor="let nombre of filteredEspecialistas" [value]="nombre">
-                                                {{ nombre }}
-                                              </mat-option>
+                                                <mat-option *ngFor="let nombre of filteredEspecialistas"
+                                                    [value]="nombre">
+                                                    {{ nombre }}
+                                                </mat-option>
                                             </mat-autocomplete>
-                                          </mat-form-field>
-                                          
-                                          <mat-form-field appearance="outline" fxFlex="50%">
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="outline" fxFlex="50%">
                                             <mat-label>Paciente</mat-label>
-                                            <input type="text" placeholder="Escriba el nombre del Paciente" matInput [formControl]="pacienteControl" [matAutocomplete]="autoPaciente" (input)="filterPacientes($event)">
-                                            
+                                            <input type="text" placeholder="Escriba el nombre del Paciente" matInput
+                                                [formControl]="pacienteControl" [matAutocomplete]="autoPaciente"
+                                                (input)="filterPacientes($event)">
+
                                             <mat-autocomplete #autoPaciente="matAutocomplete">
-                                              <mat-option *ngFor="let nombre of filterPacientesList" [value]="nombre">
+                                                <mat-option *ngFor="let nombre of filterPacientesList" [value]="nombre">
+                                                    {{ nombre }}
+                                                </mat-option>
+                                            </mat-autocomplete>
+                                        </mat-form-field>
+
+                                        <mat-form-field appearance="outline" fxFlex="50%">
+                                            <mat-label>Procedimiento</mat-label>
+                                            <input
+                                              type="text"
+                                              placeholder="Escriba el nombre del Procedimiento"
+                                              matInput
+                                              [formControl]="procedimientoControl"
+                                              [matAutocomplete]="autoProcedimiento"
+                                              (input)="filterProcedimientos($event)"
+                                            />
+                                          
+                                            <mat-autocomplete #autoProcedimiento="matAutocomplete">
+                                              <mat-option
+                                                *ngFor="let nombre of filteredProcedimientosList"
+                                                [value]="nombre"
+                                                (onSelectionChange)="seleccionarProcedimiento(nombre)"
+                                              >
                                                 {{ nombre }}
                                               </mat-option>
                                             </mat-autocomplete>
                                           </mat-form-field>
                                           
-                                        <div class="mb-3 col-xl-6 col-lg-6 col-md-12">
-                                           
-                                        </div>
-                                    </div>
-                                    <!-- end col-->
-                                    <br><br>
-                                    <div class="row g-2">
-                                        <label for="producto" class="form-label">Procedimiento</label>
-                                    </div>
-
-                                    <div class="row g-2">
-                                        <div class="mb-2 col-xl-7 col-lg-7 col-md-7 col-sm-12 col-xs-12">
-                                            <input type="text" id="producto" class="form-control"
-                                                data-provide="typeahead" placeholder="Escriba el procedimiento"
-                                                style="text-transform: uppercase;">
-                                        </div>
-
-                                        <div class="mb-2 col-xl-3 col-lg-3 col-md-3 col-sm-8 col-xs-8">
-                                            <input type="number" id="precio" class="form-control" placeholder="Precio"
-                                                style="text-transform: uppercase;">
-                                        </div>
+                                          <div class="mb-2 col-xl-3 col-lg-3 col-md-3 col-sm-8 col-xs-8">
+                                            <input
+                                              type="number"
+                                              id="precio"
+                                              class="form-control"
+                                              placeholder="Precio"
+                                              style="text-transform: uppercase;"
+                                              [value]="precioSeleccionado || ''"
+                                              readonly
+                                            />
+                                          </div>
 
                                         <div class="mb-2 col-xl-2 col-lg-2 col-md-2 col-sm-4 col-xs-4">
                                             <button type="button" class="btn btn-dark agregar">
                                                 <span class="mdi mdi-plus"></span>
                                             </button>
                                         </div>
+
                                     </div>
-                                    <!-- end col-->
+                               
 
 
                                     <table class="table table-centered mb-0" id="detalle">
