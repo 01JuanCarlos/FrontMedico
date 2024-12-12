@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UsuarioService } from '../../../service/entities/usuario.service';
 import { TokenService } from '../../../service/security/token.service';
 import { EspecialistaService } from '../../../service/entities/especialista.service';
@@ -9,6 +9,7 @@ import { ProcedimientoService } from '../../../service/entities/procedimiento.se
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { Especialista } from '../../../models/especialista';
+import { Atencion } from '../../../models/atencion';
 
 @Component({
   selector: 'app-nueva-atencion',
@@ -23,20 +24,19 @@ import { Especialista } from '../../../models/especialista';
   styleUrl: './nueva-atencion.component.css'
 })
 export class NuevaAtencionComponent implements OnInit {
+  atenciones: Atencion[] =[]
   locales: any[] = [];
   nombreUsuario: string | null | undefined;
-
-
   //
-  especialistaControl = new FormControl();
+  //  especialistaControl = new FormControl();
   especialistas: { id: number; nombres: string }[] = [];
   filteredEspecialistas: string[] = [];
   //
-  pacienteControl = new FormControl();
+  //pacienteControl = new FormControl();
   pacientes: { id: number; fullname: string; dni: string }[] = [];
   filterPacientesList: string[] = [];
   //
-  procedimientoControl = new FormControl();
+  //  procedimientoControl = new FormControl();
   procedimientos: { id: number; descripcion: string, precio: number }[] = []; // Inicializar el array
   filteredProcedimientosList: string[] = [];
   //
@@ -44,7 +44,8 @@ export class NuevaAtencionComponent implements OnInit {
   //
   precioSeleccionado: number | null = null;
   //
-  registros: { procedimiento: string; precio: number,especialista: Especialista,paciente:string,localid:number }[] = []; 
+  registros: { procedimiento: string; precio: number, especialista: Especialista, paciente: string, localid: number }[] = [];
+  formularioAtenciones!: FormGroup;
 
   constructor(private usuarioService: UsuarioService,
     private tokenservice: TokenService,
@@ -56,24 +57,37 @@ export class NuevaAtencionComponent implements OnInit {
 
   ngOnInit(): void {
     this.nombreUsuario = this.tokenservice.getUserName();
+
+    this.formularioAtenciones = new FormGroup({
+      localid: new FormControl(0),
+      especialistaControl: new FormControl('', Validators.required),
+      pacienteControl: new FormControl('', Validators.required),
+      procedimientoControl: new FormControl('', Validators.required),
+      precio: new FormControl({ value: '', disabled: true }),
+    });
+
+
     this.obtenerusuario();
   }
 
+  onSubmit(): void {
+    if (this.formularioAtenciones.valid) {
+      const formValues = this.formularioAtenciones.value;
+      console.log('Formulario enviado con éxito:', formValues);
 
-  agregarRegistro(): void {
-    const procedimientoSeleccionado = this.procedimientoControl.value;
-    const precioSeleccionado = this.precioSeleccionado;
-
-   /* if (procedimientoSeleccionado && precioSeleccionado !== null) {
-      this.registros.push({
-        procedimiento: procedimientoSeleccionado,
-        precio: precioSeleccionado,
-      });
-      this.procedimientoControl.reset();
-      this.precioSeleccionado = null;
+      // Lógica adicional para enviar los datos al backend...
     } else {
-      alert('Debe seleccionar un procedimiento válido.');
-    }*/
+      console.log('Formulario inválido. Revise los campos.');
+    }
+  }
+
+
+  agregarCita() {
+    if (this.formularioAtenciones.valid) {
+      const nuevaAtencion: Atencion = this.formularioAtenciones.value;
+      this.atenciones.push(nuevaAtencion);
+      this.formularioAtenciones.reset(); // Limpia el formulario
+    }
   }
 
   quitarRegistro(index: number): void {
@@ -82,11 +96,11 @@ export class NuevaAtencionComponent implements OnInit {
 
 
   onLocalChange(event: Event): void {
+    this.formReset();
     const inputElement = event.target as HTMLInputElement;
     this.localid = Number(inputElement.value); // Asigna el valor seleccionado como número
     console.log('Local seleccionado con ID:', this.localid);
     this.obtenerPacienets(this.localid);
-    this.procedimientos = [];
     this.obtenerProcedimientos(this.localid);
     this.obtenerEspecialistasActivos(this.localid);
   }
@@ -103,6 +117,7 @@ export class NuevaAtencionComponent implements OnInit {
     this.filteredEspecialistas = this.especialistas
       .filter(especialista => especialista.nombres.toLowerCase().includes(filterValue))
       .map(especialista => especialista.nombres);
+    console.log("filter especialistas: " + this.filteredEspecialistas);
   }
 
 
@@ -222,5 +237,14 @@ export class NuevaAtencionComponent implements OnInit {
     );
   }
 
-
+  formReset() {
+    this.formularioAtenciones.reset();
+    this.especialistas = [];
+    this.pacientes = [];
+    this.procedimientos = [];
+    this.filteredProcedimientosList = [];
+    this.filterPacientesList = [];
+    this.filteredEspecialistas = [];
+    this.precioSeleccionado=0;
+  }
 }

@@ -41,26 +41,22 @@
                         <div class="card-body">
 
                             <div class="row">
-                                <form>
+                                <form [formGroup]="formularioAtenciones">
                                     <div class="col-xl-12 col-lg-12">
                                         <h6 class="font-18 mt-3">Local de atención</h6>
                                         <div class="mb-3">
-                                            <div class="form-check form-check-inline" *ngFor="let local of locales; let i = index">
-                                                <input
-                                                    type="radio"
-                                                    id="local{{i}}"
-                                                    name="customRadio1"
-                                                    class="form-check-input"
-                                                    [value]="local.id" 
-                                                    (change)="onLocalChange($event)" 
-                                                >
+                                            <div class="form-check form-check-inline"
+                                                *ngFor="let local of locales; let i = index">
+                                                <input type="radio" id="local{{i}}" name="customRadio1"
+                                                    class="form-check-input" [value]="local.id"
+                                                    (change)="onLocalChange($event)">
                                                 <label class="form-check-label" [for]="'local' + i">
                                                     {{ local.nombre }} <!-- Muestra el nombre del local -->
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
-                                    
+
 
 
 
@@ -70,7 +66,8 @@
                                         <mat-form-field appearance="outline" fxFlex="50%">
                                             <mat-label>Especialista</mat-label>
                                             <input type="text" placeholder="Escriba el nombre del Especialista" matInput
-                                                [formControl]="especialistaControl" [matAutocomplete]="autoEspecialista"
+                                                formControlName="especialistaControl"
+                                                [matAutocomplete]="autoEspecialista"
                                                 (input)="filterEspecialistas($event)">
 
                                             <mat-autocomplete #autoEspecialista="matAutocomplete">
@@ -84,7 +81,7 @@
                                         <mat-form-field appearance="outline" fxFlex="50%">
                                             <mat-label>Paciente</mat-label>
                                             <input type="text" placeholder="Escriba el nombre del Paciente" matInput
-                                                [formControl]="pacienteControl" [matAutocomplete]="autoPaciente"
+                                                formControlName="pacienteControl" [matAutocomplete]="autoPaciente"
                                                 (input)="filterPacientes($event)">
 
                                             <mat-autocomplete #autoPaciente="matAutocomplete">
@@ -96,46 +93,36 @@
 
                                         <mat-form-field appearance="outline" fxFlex="50%">
                                             <mat-label>Procedimiento</mat-label>
-                                            <input
-                                              type="text"
-                                              placeholder="Escriba el nombre del Procedimiento"
-                                              matInput
-                                              [formControl]="procedimientoControl"
-                                              [matAutocomplete]="autoProcedimiento"
-                                              (input)="filterProcedimientos($event)"
-                                            />
-                                          
+                                            <input type="text" placeholder="Escriba el nombre del Procedimiento"
+                                                matInput formControlName="procedimientoControl"
+                                                [matAutocomplete]="autoProcedimiento"
+                                                (input)="filterProcedimientos($event)" />
+
                                             <mat-autocomplete #autoProcedimiento="matAutocomplete">
-                                              <mat-option
-                                                *ngFor="let nombre of filteredProcedimientosList"
-                                                [value]="nombre"
-                                                (onSelectionChange)="seleccionarProcedimiento(nombre)"
-                                              >
-                                                {{ nombre }}
-                                              </mat-option>
+                                                <mat-option *ngFor="let nombre of filteredProcedimientosList"
+                                                    [value]="nombre"
+                                                    (onSelectionChange)="seleccionarProcedimiento(nombre)">
+                                                    {{ nombre }}
+                                                </mat-option>
                                             </mat-autocomplete>
-                                          </mat-form-field>
-                                          
-                                          <div class="mb-2 col-xl-3 col-lg-3 col-md-3 col-sm-8 col-xs-8">
-                                            <input
-                                              type="number"
-                                              id="precio"
-                                              class="form-control"
-                                              placeholder="Precio"
-                                              style="text-transform: uppercase;"
-                                              [value]="precioSeleccionado || ''"
-                                              readonly
-                                            />
-                                          </div>
+                                        </mat-form-field>
+
+                                        <div class="mb-2 col-xl-3 col-lg-3 col-md-3 col-sm-8 col-xs-8">
+                                            <input type="number" id="precio" formControlName="precio"
+                                                class="form-control" placeholder="Precio"
+                                                style="text-transform: uppercase;" [value]="precioSeleccionado || ''"
+                                                readonly />
+                                        </div>
 
                                         <div class="mb-2 col-xl-2 col-lg-2 col-md-2 col-sm-4 col-xs-4">
-                                            <button type="button" class="btn btn-dark agregar">
+                                            <button type="submit" class="btn btn-dark agregar" 
+                                                [disabled]="formularioAtenciones.invalid">
                                                 <span class="mdi mdi-plus"></span>
                                             </button>
                                         </div>
 
                                     </div>
-                               
+
 
 
                                     <table class="table table-centered mb-0" id="detalle">
@@ -144,9 +131,14 @@
                                                 <th>Procedimiento</th>
                                                 <th>Costo S/.</th>
                                                 <th>Quitar</th>
-                                            </tr>
+                                              </tr>
                                         </thead>
                                         <tbody>
+                                            <tr *ngFor="let registro of atenciones; let i = index">
+                                                <td>{{ registro.procedimiento }}</td>
+                                                <td>{{ registro.precio }}</td>
+                                                <td><button (click)="quitarRegistro(i)">Quitar</button></td>
+                                              </tr>
                                         </tbody>
                                     </table>
 
